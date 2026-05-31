@@ -19,13 +19,15 @@ pipx install crawl4ai
 Check if installed:
 
 ```bash
-crwl --version
+crwl --help
 ```
 
 Expected output:
 
 ```
-Crawl4AI v0.x.x
+Usage: crwl crawl [OPTIONS] URL
+
+  Crawl a website and extract content
 ```
 
 ## Browser Setup
@@ -52,7 +54,7 @@ If ANY command returns an error (e.g., "command not found", "browser not found",
 
 ### If user selects pip or pipx install:
 
-Run the appropriate install command, then run `crwl --setup` for browser drivers. After setup, verify with `crwl --version`.
+Run the appropriate install command, then run `crwl --setup` for browser drivers. After setup, verify with `crwl --help`.
 
 ### If user selects Docker:
 
@@ -72,7 +74,7 @@ Then inform the user the server is running at `http://localhost:11235` and the d
 If `crwl` command is not found after installation:
 
 1. Make sure pip/pipx bin directory is in PATH
-2. Try: `python -m crawl4ai --version`
+2. Try: `python -m crawl4ai --help`
 3. Or reinstall: `pip install --force-reinstall -U crawl4ai`
 
 ### Browser setup fails

@@ -28,7 +28,7 @@ Always use the `crwl` CLI to fetch, crawl, and extract web data. Prioritize Craw
 Check if installed:
 
 ```bash
-crwl --version
+crwl --help
 ```
 
 If not installed:
@@ -49,14 +49,14 @@ Always refer to the installation rules in [rules/install.md](rules/install.md) f
 
 ## Organization
 
-Create a `.crawl4ai/` folder in the working directory unless it already exists to store results. Add `.crawl4ai/` to the `.gitignore` file if not already there. Always use `-o` to write directly to file (avoids flooding context):
+Create a `.crawl4ai/` folder in the working directory unless it already exists to store results. Add `.crawl4ai/` to the `.gitignore` file if not already there. Always use `-O` to write directly to file (avoids flooding context):
 
 ```bash
-# Scrape a single page
-crwl https://example.com -o .crawl4ai/example.md
+# Scrape a single page to markdown file
+crwl https://example.com -o markdown -O .crawl4ai/example.md
 
-# Deep crawl a website
-crwl https://example.com --deep-crawl bfs --max-pages 20 -o .crawl4ai/crawl.json
+# Deep crawl a website to JSON file
+crwl https://example.com --deep-crawl bfs --max-pages 20 -O .crawl4ai/crawl.json
 ```
 
 Examples:
@@ -89,79 +89,75 @@ Organize into subdirectories when it makes sense for the task:
 ### Scrape - Single page content extraction
 
 ```bash
-# Basic scrape (markdown output)
-crwl https://example.com -o .crawl4ai/example.md
+# Basic scrape (JSON output to stdout)
+crwl https://example.com
 
-# Get raw HTML
-crwl https://example.com --output-html -o .crawl4ai/example.html
+# Markdown output to file
+crwl https://example.com -o markdown -O .crawl4ai/example.md
 
-# Get both markdown and HTML
-crwl https://example.com --output-markdown --output-html -o .crawl4ai/example
+# JSON output to file (default)
+crwl https://example.com -O .crawl4ai/example.json
 
-# Scrape with JavaScript rendering and wait
-crwl https://spa-app.com --wait-for 3000 -o .crawl4ai/spa.md
+# Fit markdown (filtered, main content only) to file
+crwl https://example.com -o markdown-fit -O .crawl4ai/example-fit.md
 
-# Scrape with screenshot
-crwl https://example.com --screenshot -o .crawl4ai/example
-
-# Scrape with specific user agent
-crwl https://example.com --user-agent "Mozilla/5.0" -o .crawl4ai/example.md
+# All formats to file
+crwl https://example.com -o all -O .crawl4ai/example
 ```
 
 **Scrape Options:**
 
-- `-o, --output <path>` - Save to file (required to avoid flooding context)
-- `--output-markdown` - Output markdown
-- `--output-html` - Output raw HTML
-- `--output-fit-markdown` - Output filtered markdown (main content only)
-- `--screenshot` - Take screenshot
-- `--wait-for <ms>` - Wait before scraping (for JS content)
-- `--user-agent <ua>` - Custom user agent string
-- `--headers <json>` - Custom headers as JSON string
-- `--cookies <json>` - Custom cookies as JSON string
-- `--proxy <url>` - Proxy URL
-- `--timeout <ms>` - Request timeout
+- `-o, --output <format>` - Output format: `all`, `json`, `markdown`/`md`, `markdown-fit`/`md-fit` (default: `json`)
+- `-O, --output-file <path>` - Save to file path (required to avoid flooding context)
+- `-b, --browser <params>` - Browser parameters as `key1=value1,key2=value2` (e.g., `headless=false,viewport_width=1280`)
+- `-c, --crawler <params>` - Crawler parameters as `key1=value1,key2=value2` (e.g., `wait_for=3000,page_timeout=60000`)
+- `-B, --browser-config <file>` - Browser config file (YAML/JSON)
+- `-C, --crawler-config <file>` - Crawler config file (YAML/JSON)
+- `-bc, --bypass-cache` - Bypass cache when crawling
+- `-p, --profile <name>` - Use a specific browser profile
+- `-v, --verbose` - Verbose output
 
 ### Deep Crawl - Recursive website crawling
 
 ```bash
-# Basic deep crawl (BFS, up to 50 pages)
-crwl https://example.com --deep-crawl bfs --max-pages 50 -o .crawl4ai/crawl.json
+# Basic deep crawl (BFS, up to 50 pages, JSON output)
+crwl https://example.com --deep-crawl bfs --max-pages 50 -O .crawl4ai/crawl.json
 
 # Deep crawl with DFS strategy
-crwl https://example.com --deep-crawl dfs --max-pages 30 -o .crawl4ai/crawl-dfs.json
+crwl https://example.com --deep-crawl dfs --max-pages 30 -O .crawl4ai/crawl-dfs.json
 
-# Deep crawl with specific path patterns
-crwl https://docs.crawl4ai.com --deep-crawl bfs --max-pages 100 --include "*/core/*" -o .crawl4ai/docs.json
+# Deep crawl with best-first strategy
+crwl https://example.com --deep-crawl best-first --max-pages 20 -O .crawl4ai/crawl-best.json
 
-# Deep crawl excluding certain paths
-crwl https://example.com --deep-crawl bfs --max-pages 50 --exclude "*/admin/*" -o .crawl4ai/crawl.json
+# Deep crawl with markdown output
+crwl https://docs.crawl4ai.com --deep-crawl bfs --max-pages 100 -o markdown -O .crawl4ai/docs.md
 ```
 
 **Deep Crawl Options:**
 
-- `--deep-crawl <strategy>` - Crawl strategy: `bfs` or `dfs`
+- `--deep-crawl <strategy>` - Crawl strategy: `bfs`, `dfs`, or `best-first`
 - `--max-pages <n>` - Maximum pages to crawl (default: 50)
-- `--include <patterns>` - Comma-separated URL patterns to include
-- `--exclude <patterns>` - Comma-separated URL patterns to exclude
-- `--same-domain` - Stay within the same domain (default: true)
-- `--same-origin` - Stay within the same origin
+- `-b, --browser <params>` - Browser parameters
+- `-c, --crawler <params>` - Crawler parameters
+- `-B, --browser-config <file>` - Browser config file
+- `-C, --crawler-config <file>` - Crawler config file
+- `-bc, --bypass-cache` - Bypass cache
 
 ### LLM Q&A - Ask questions about page content
 
 ```bash
 # Ask a question about a single page
-crwl https://example.com -q "What is the main topic of this page?" -o .crawl4ai/qa.json
+crwl https://example.com -q "What is the main topic of this page?" -O .crawl4ai/qa.json
 
 # Ask with a specific provider
-crwl https://example.com -q "Summarize the key points" --provider openai/gpt-4o -o .crawl4ai/qa.json
+crwl https://example.com -q "Summarize the key points" -b llm_config_provider=openai/gpt-4o -O .crawl4ai/qa.json
 ```
 
 **LLM Q&A Options:**
 
 - `-q, --question <text>` - Question to ask about the page
-- `--provider <provider>` - LLM provider (e.g., `openai/gpt-4o`, `anthropic/claude-3-sonnet`, `ollama/llama3`)
-- `--temperature <n>` - Temperature for LLM (default: 0.7)
+- `-b, --browser <params>` - LLM config via browser params (e.g., `llm_config_provider=openai/gpt-4o`)
+- `-B, --browser-config <file>` - Config file with LLM settings
 
 **Important:** First-time LLM usage requires provider configuration in `~/.crawl4ai/global.yml`:
 
@@ -181,22 +177,23 @@ export OPENAI_API_KEY=sk-...
 ### Structured Extraction - Extract data via JSON Schema
 
 ```bash
-# Extract with inline schema
-crwl https://example.com -e "title,author,published_date" -o .crawl4ai/extracted.json
+# Extract with inline schema description using LLM
+crwl https://example.com -j "Extract the title, author, and published date" -O .crawl4ai/extracted.json
 
 # Extract with schema file
-crwl https://example.com -s schema.json -o .crawl4ai/extracted.json
+crwl https://example.com -s schema.json -O .crawl4ai/extracted.json
 
-# Extract with specific provider
-crwl https://example.com -s schema.json --provider openai/gpt-4o -o .crawl4ai/extracted.json
+# Extract with config file containing LLM settings
+crwl https://example.com -s schema.json -B llm-config.yml -O .crawl4ai/extracted.json
 ```
 
 **Structured Extraction Options:**
 
-- `-e, --extract <fields>` - Comma-separated fields to extract
+- `-j, --json-extract <text>` - Extract structured data using LLM with a description
 - `-s, --schema <file>` - JSON schema file for extraction
-- `--provider <provider>` - LLM provider for extraction
-- `--temperature <n>` - Temperature for extraction
+- `-e, --extraction-config <file>` - Extraction strategy config file
+- `-b, --browser <params>` - LLM config via browser params
+- `-B, --browser-config <file>` - Config file with LLM settings
 
 Example `schema.json`:
 
@@ -213,35 +210,40 @@ Example `schema.json`:
 ### Content Filtering - Filter pages by relevance
 
 ```bash
-# Filter by cosine similarity to a query
-crwl https://example.com -f "machine learning" -o .crawl4ai/filtered.md
+# Filter using a config file
+crwl https://example.com -f filter-config.yml -O .crawl4ai/filtered.json
 
-# Filter by regex pattern
-crwl https://example.com --regex-filter "\bAI\b" -o .crawl4ai/filtered.md
-
-# Filter with threshold
-crwl https://example.com -f "python tutorial" --threshold 0.7 -o .crawl4ai/filtered.md
+# Filter with markdown output
+crwl https://example.com -f filter-config.yml -o markdown -O .crawl4ai/filtered.md
 ```
 
 **Content Filtering Options:**
 
-- `-f, --filter <query>` - Filter by semantic similarity to query
-- `--regex-filter <pattern>` - Filter by regex pattern
-- `--threshold <n>` - Similarity threshold (0-1, default: 0.5)
+- `-f, --filter-config <file>` - Content filter config file (YAML/JSON)
+- Combine with `-o` and `-O` for desired output format and file
+
+Example `filter-config.yml`:
+
+```yaml
+filter:
+  type: cosine_similarity
+  query: machine learning tutorial
+  threshold: 0.7
+```
 
 ## Output Format
 
-Crawl4AI outputs JSON by default for multi-page crawls and markdown for single scrapes. Use `jq` to process JSON output:
+Crawl4AI outputs JSON by default. Use `-o` to select a different format. Use `jq` to process JSON output:
 
 ```bash
 # Extract URLs from deep crawl
 jq -r '.[].url' .crawl4ai/crawl.json
 
 # Extract titles
-jq -r '.[].title' .crawl4ai/crawl.json
+jq -r '.[].metadata.title' .crawl4ai/crawl.json
 
 # Extract markdown content
-jq -r '.[].markdown' .crawl4ai/crawl.json | head -100
+jq -r '.[].markdown.raw_markdown' .crawl4ai/crawl.json | head -100
 
 # Filter by URL pattern
 jq '.[] | select(.url | contains("/blog/"))' .crawl4ai/crawl.json
@@ -274,21 +276,21 @@ Adjust line counts, offsets, and grep context as needed. Use other bash commands
 
 ```bash
 # WRONG - sequential (slow)
-crwl https://site1.com -o .crawl4ai/1.md
-crwl https://site2.com -o .crawl4ai/2.md
-crwl https://site3.com -o .crawl4ai/3.md
+crwl https://site1.com -O .crawl4ai/1.json
+crwl https://site2.com -O .crawl4ai/2.json
+crwl https://site3.com -O .crawl4ai/3.json
 
 # CORRECT - parallel (fast)
-crwl https://site1.com -o .crawl4ai/1.md &
-crwl https://site2.com -o .crawl4ai/2.md &
-crwl https://site3.com -o .crawl4ai/3.md &
+crwl https://site1.com -O .crawl4ai/1.json &
+crwl https://site2.com -O .crawl4ai/2.json &
+crwl https://site3.com -O .crawl4ai/3.json &
 wait
 ```
 
 For many URLs, use xargs with `-P` for parallel execution:
 
 ```bash
-cat urls.txt | xargs -P 10 -I {} sh -c 'crwl "{}" -o ".crawl4ai/$(echo {} | md5).md"'
+cat urls.txt | xargs -P 10 -I {} sh -c 'crwl "{}" -O ".crawl4ai/$(echo {} | md5).json"'
 ```
 
 For deep crawls, use `--max-pages` to control scope and avoid over-crawling.
@@ -331,15 +333,15 @@ Dashboard available at: `http://localhost:11235/dashboard`
 
 ```bash
 # Extract all links from crawl output
-jq -r '.[].links[]?.href' .crawl4ai/crawl.json | sort | uniq
+jq -r '.[].links.external[].href' .crawl4ai/crawl.json | sort | uniq
 
 # Count words in markdown output
-jq -r '.[].markdown' .crawl4ai/crawl.json | wc -w
+jq -r '.[].markdown.raw_markdown' .crawl4ai/crawl.json | wc -w
 
 # Search within crawl results
-jq -r '.[].markdown' .crawl4ai/crawl.json | grep -i "keyword"
+jq -r '.[].markdown.raw_markdown' .crawl4ai/crawl.json | grep -i "keyword"
 
 # Generate summary statistics
 jq 'length' .crawl4ai/crawl.json  # number of pages
-jq 'map(.title) | .[]' .crawl4ai/crawl.json  # all titles
+jq 'map(.metadata.title) | .[]' .crawl4ai/crawl.json  # all titles
 ```
