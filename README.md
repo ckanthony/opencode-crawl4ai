@@ -1,10 +1,16 @@
-# opencode-crawl4ai
+# @ckanthony/opencode-crawl4ai
 
 OpenCode plugin for [Crawl4AI](https://crawl4ai.com) — gives your AI agent reliable web scraping, deep crawling, LLM-powered extraction, and structured data via the [Crawl4AI CLI](https://docs.crawl4ai.com/core/cli/).
 
 ## Installation
 
-Add the plugin to your `opencode.json`:
+### 1. Install the OpenCode plugin
+
+```bash
+npm install -g @ckanthony/opencode-crawl4ai
+```
+
+Or add it to your `opencode.json`:
 
 ```json
 {
