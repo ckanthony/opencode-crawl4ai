@@ -22,7 +22,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ckanthony/opencode-crawl4ai"
+    "url": "git+https://github.com/ckanthony/opencode-crawl4ai.git"
   },
   "homepage": "https://crawl4ai.com",
   "author": {
