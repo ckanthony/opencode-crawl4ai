@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Crawl4AI plugin for OpenCode - web scraping, crawling, LLM extraction, and structured data via the Crawl4AI CLI",
   "type": "module",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "index.ts",
+    "dist",
     "skills"
   ],
   "keywords": [
@@ -28,7 +29,8 @@
     "name": "Anthony Chan"
   },
   "scripts": {
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json && cp -r skills dist/"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "^1.0.0",
