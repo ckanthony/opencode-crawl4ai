@@ -9,7 +9,7 @@ Add the plugin to your `opencode.json`:
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugins": ["opencode-crawl4ai"]
+  "plugins": ["@ckanthony/opencode-crawl4ai"]
 }
 ```
 

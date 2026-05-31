@@ -1,5 +1,5 @@
 {
-  "name": "opencode-crawl4ai",
+  "name": "@ckanthony/opencode-crawl4ai",
   "version": "1.0.0",
   "description": "Crawl4AI plugin for OpenCode - web scraping, crawling, LLM extraction, and structured data via the Crawl4AI CLI",
   "type": "module",
