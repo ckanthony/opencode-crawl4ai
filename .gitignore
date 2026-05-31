@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.crawl4ai/
+*.tsbuildinfo

@@ -1,0 +1,38 @@
+{
+  "name": "opencode-crawl4ai",
+  "version": "1.0.0",
+  "description": "Crawl4AI plugin for OpenCode - web scraping, crawling, LLM extraction, and structured data via the Crawl4AI CLI",
+  "type": "module",
+  "main": "index.ts",
+  "files": [
+    "index.ts",
+    "skills"
+  ],
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "crawl4ai",
+    "web-scraping",
+    "crawling",
+    "llm-extraction",
+    "structured-data",
+    "ai"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ckanthony/opencode-crawl4ai"
+  },
+  "homepage": "https://crawl4ai.com",
+  "author": {
+    "name": "Anthony Chan"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.0.0",
+    "@types/node": "^25.2.2",
+    "typescript": "^5.0.0"
+  }
+}
